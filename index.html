@@ -1,103 +1,57 @@
 <html>
 <head>
-
-  <title>Awesome landing Page</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="resources/css/style.css">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
-<body>
-
-
-<nav class="navbar navbar-default">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="#">Me</a>
-    </div>
-    <div class="collapse navbar-collapse" id="myNavbar">
-      <ul class="nav navbar-nav navbar-right">
-        <li><a href="#">WHO</a></li>
-        <li><a href="#">WHAT</a></li>
-        <li><a href="#">WHERE</a></li>
-      </ul>
-    </div>
-  </div>
-</nav>
-
-
-<div class="container-fluid bg-1 text-center">
-  <h3 class="margin">Who Am I?</h3>
-  <img src="resources/img/bird.jpg" class="img-responsive img-circle margin" style="display:inline" alt="Bird" width="350" height="350">
-  <h3>I'm an adventurer</h3>
-</div>
-
-
-<div class="container-fluid bg-2 text-center">
-  <h3 class="margin">What Am I?</h3>
-  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
-  <a href="#" class="btn btn-default btn-lg">
-    <span class="glyphicon glyphicon-search"></span> Search
-  </a>
-</div>
-
-
-<div class="container-fluid bg-3 text-center">
-  <h3 class="margin">Where To Find Me?</h3><br>
-  <div class="row">
-    <div class="col-sm-12, col-md-4">
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-      <img src="resources/img/birds1.jpg" class="img-responsive margin" style="width:100%" alt="Image">
-    </div>
-    <div class="col-sm-12, col-md-4">
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-      <img src="resources/img/birds2.jpg" class="img-responsive margin" style="width:100%" alt="Image">
-    </div>
-    <div class="col-sm-12, col-md-4">
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-      <img src="resources/img/birds3.jpg" class="img-responsive margin" style="width:100%" alt="Image">
-    </div>
-  </div>
-</div>
-  <div class="container">
-<div class="row">
-<div class="col-md-4"> </div>
-<div class="col-md-4">
-   <h4>Форма обратной связи</h4>
-   <form action="./mail.php" method="post">
-<div class="form-group">
-   <label for="name">Ваше имя:</label>
-   <input type="name" name="name" class="form-control" id="name" placeholder="Name">
-</div>
-<div class="form-group">
-   <label for="email1">E-mail:</label>
-   <input type="email" name="email" class="form-control" id="email1" placeholder="Email">
-</div>
-<div class="form-group">
-   <label for="phone">Номер телефона:</label>
-   <input type="phone" name="phone" class="form-control" id="phone" placeholder="Phone">
-</div>
-<div class="form-group">
-   <label for="message">Сообщение:</label>
-   <textarea class="form-control" name="message" rows="3"></textarea>
-</div>
-   <button type="submit" class="btn btn-info">Отправить сообщение</button>
-</form>
-</div>
-<div class="col-md-4"> </div> </div>
-</div>
-
-<!-- Footer -->
-<footer class="container-fluid bg-4 text-center">
-  <p>MyLandigPage <a href="#">ITMO WEB TRAIL</a></p>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js">
+  <body>
+<section class="todoapp">
+  <header class="header">
+    <h1>todos</h1>
+    <input class="new-todo"
+      autofocus autocomplete="off"
+      placeholder="What needs to be done?"
+      v-model="newTodo"
+      @keyup.enter="addTodo">
+  </header>
+  <section class="main" v-show="todos.length" v-cloak>
+    <input class="toggle-all" type="checkbox" v-model="allDone">
+    <ul class="todo-list">
+      <li v-for="todo in filteredTodos"
+        class="todo"
+        :key="todo.id"
+        :class="{ completed: todo.completed, editing: todo == editedTodo }">
+        <div class="view">
+          <input class="toggle" type="checkbox" v-model="todo.completed">
+          <label @dblclick="editTodo(todo)">{{ todo.title }}</label>
+          <button class="destroy" @click="removeTodo(todo)"></button>
+        </div>
+        <input class="edit" type="text"
+          v-model="todo.title"
+          v-todo-focus="todo == editedTodo"
+          @blur="doneEdit(todo)"
+          @keyup.enter="doneEdit(todo)"
+          @keyup.esc="cancelEdit(todo)">
+      </li>
+    </ul>
+  </section>
+  <footer class="footer" v-show="todos.length" v-cloak>
+    <span class="todo-count">
+      <strong>{{ remaining }}</strong> {{ remaining | pluralize }} left
+    </span>
+    <ul class="filters">
+      <li><a href="#/all" :class="{ selected: visibility == 'all' }">All</a></li>
+      <li><a href="#/active" :class="{ selected: visibility == 'active' }">Active</a></li>
+      <li><a href="#/completed" :class="{ selected: visibility == 'completed' }">Completed</a></li>
+    </ul>
+    <button class="clear-completed" @click="removeCompleted" v-show="todos.length > remaining">
+      Clear completed
+    </button>
+  </footer>
+</section>
+<footer class="info">
+  <p>Double-click to edit a todo</p>
+  <p>Written by <a href="http://evanyou.me">Evan You</a></p>
+  <p>Part of <a href="http://todomvc.com">TodoMVC</a></p>
 </footer>
-
-</body>
+  </body>
 </html>
